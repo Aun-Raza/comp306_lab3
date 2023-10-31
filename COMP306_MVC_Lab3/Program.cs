@@ -9,7 +9,7 @@ var connectionString = builder.Configuration.GetConnectionString("AuthDbContextC
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<AuthDbContext>();
 
 // Add services to the container.
@@ -17,6 +17,14 @@ builder.Services.AddControllersWithViews();
 
 // add support for razor pages
 builder.Services.AddRazorPages();
+
+// change password requirements here
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
+});
 
 var app = builder.Build();
 
