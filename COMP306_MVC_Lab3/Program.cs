@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using COMP306_MVC_Lab3.Data;
 using COMP306_MVC_Lab3.Areas.Identity.Data;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 
 var builder = WebApplication.CreateBuilder(args);
 // connection string for the SQL database that stores user information
@@ -12,6 +14,12 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<AuthDbContext>();
+
+// AWS DynamoDB setup
+var awsOptions = builder.Configuration.GetAWSOptions();
+builder.Services.AddDefaultAWSOptions(awsOptions);
+builder.Services.AddAWSService<IAmazonDynamoDB>();
+builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
