@@ -4,8 +4,9 @@ using COMP306_MVC_Lab3.Data;
 using COMP306_MVC_Lab3.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+// connection string for the SQL database that stores user information
 var connectionString = builder.Configuration.GetConnectionString("AuthDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AuthDbContextConnection' not found.");
-
+// context for the SQL database that stores user information
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(connectionString));
 
