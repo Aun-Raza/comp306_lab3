@@ -4,6 +4,7 @@ using COMP306_MVC_Lab3.Data;
 using COMP306_MVC_Lab3.Areas.Identity.Data;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 // connection string for the SQL database that stores user information
@@ -18,6 +19,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 // AWS DynamoDB setup
 var awsOptions = builder.Configuration.GetAWSOptions();
 builder.Services.AddDefaultAWSOptions(awsOptions);
+builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddAWSService<IAmazonDynamoDB>();
 builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
 
