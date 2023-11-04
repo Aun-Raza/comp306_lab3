@@ -38,14 +38,15 @@ namespace COMP306_MVC_Lab3.Controllers
         public IActionResult Upsert(string? id)
         {
             if (string.IsNullOrEmpty(id)) 
-            { 
-                // add movie
-                ViewData["UserId"] = _userManager.GetUserId(this.User);
-                return View(new Movie());
+            {
+                // add movie view
+                var newMovie = new Movie();
+                newMovie.UserID = _userManager.GetUserId(this.User);
+                return View(newMovie);
             }
             else
             {
-                // edit movie
+                // edit movie view
                 return NotFound();
             }
         }
@@ -54,7 +55,18 @@ namespace COMP306_MVC_Lab3.Controllers
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                if (string.IsNullOrEmpty(movie.Id))
+                {
+                    // for adding movie
+                    movie.Id = Guid.NewGuid().ToString();
+                    _context.SaveAsync(movie);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    // for updating movie
+                    return RedirectToAction("Index");
+                }
             }
             else
             {

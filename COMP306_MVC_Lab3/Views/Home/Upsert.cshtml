@@ -2,6 +2,7 @@
 
 <form method="post" enctype="multipart/form-data">
     <input asp-for="Id" hidden />
+    <input asp-for="UserID" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">@(string.IsNullOrEmpty(Model.Id)?"Update":"Create") Product</h2>
