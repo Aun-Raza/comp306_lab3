@@ -1,0 +1,50 @@
+﻿@model Movie
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="Id" hidden />
+    <input asp-for="UserID" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">@(string.IsNullOrEmpty(Model.Id)?"Update":"Create") Product</h2>
+            <hr />
+        </div>
+        <div asp-validation-summary="All"></div>
+        <div class="mb-3 row p-1">
+            <label asp-for="Title" class="p-0">Title</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="mb-3 row p-1">
+            <label asp-for=Genre class="p-0">Genre</label>
+            <input asp-for=Genre class="form-control" />
+            <span asp-validation-for="Genre" class="text-danger"></span>
+        </div>
+        <div class="mb-3 row p-1">
+            <label asp-for=FilePath class="p-0">FilePath</label>
+            <input asp-for=FilePath class="form-control" />
+            <span asp-validation-for="FilePath" class="text-danger"></span>
+        </div>
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <button type="submit"
+                        class="btn btn-primary form-control"
+                >
+                    @(string.IsNullOrEmpty(Model.Id)?"Update" : "Create")
+                </button>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-secondary form-control border"
+                >
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

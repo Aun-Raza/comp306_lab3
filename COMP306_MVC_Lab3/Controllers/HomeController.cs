@@ -35,6 +35,45 @@ namespace COMP306_MVC_Lab3.Controllers
             return View(movies);
         }
 
+        public IActionResult Upsert(string? id)
+        {
+            if (string.IsNullOrEmpty(id)) 
+            {
+                // add movie view
+                var newMovie = new Movie();
+                newMovie.UserID = _userManager.GetUserId(this.User);
+                return View(newMovie);
+            }
+            else
+            {
+                // edit movie view
+                return NotFound();
+            }
+        }
+        [HttpPost]
+        public IActionResult Upsert(Movie movie)
+        {
+            if (ModelState.IsValid)
+            {
+                if (string.IsNullOrEmpty(movie.Id))
+                {
+                    // for adding movie
+                    movie.Id = Guid.NewGuid().ToString();
+                    _context.SaveAsync(movie);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    // for updating movie
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                return View(movie);
+            }
+        }
+
         public IActionResult Privacy()
         {
             return View();
