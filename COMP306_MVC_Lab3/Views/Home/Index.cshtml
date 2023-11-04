@@ -2,8 +2,35 @@
     ViewData["Title"] = "Home Page";
 }
 
+@model IEnumerable<Movie> 
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <p>User Id: @ViewData["UserId"] || (this is a reference of how to get user Id on a page, delete this later)</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>FilePath</th>
+                <th>UserID</th>
+                <!-- Add more headers if needed -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>@movie.Id</td>
+                    <td>@movie.Title</td>
+                    <td>@movie.Genre</td>
+                    <td>@movie.FilePath</td>
+                    <td>@movie.UserID</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

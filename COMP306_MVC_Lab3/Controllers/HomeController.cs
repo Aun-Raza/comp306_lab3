@@ -1,4 +1,5 @@
-﻿using COMP306_MVC_Lab3.Areas.Identity.Data;
+﻿using Amazon.DynamoDBv2.DataModel;
+using COMP306_MVC_Lab3.Areas.Identity.Data;
 using COMP306_MVC_Lab3.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,17 +15,24 @@ namespace COMP306_MVC_Lab3.Controllers
         // used to retrieve the logged in user's information
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+        private readonly IDynamoDBContext _context;
+
+        public HomeController(ILogger<HomeController> logger,
+            IDynamoDBContext context,
+            UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
-            this._userManager = userManager;
+            _userManager = userManager;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            // This is an example of how to access user ID on a page.
+
+            var conditions = new List<ScanCondition>();
+            var movies = await _context.ScanAsync<Movie>(conditions).GetRemainingAsync();
             ViewData["UserId"] = _userManager.GetUserId(this.User);
-            return View();
+            return View(movies);
         }
 
         public IActionResult Privacy()
