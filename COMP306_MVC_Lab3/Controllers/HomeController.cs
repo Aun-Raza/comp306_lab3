@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net;
 
 namespace COMP306_MVC_Lab3.Controllers
 {
@@ -28,14 +29,13 @@ namespace COMP306_MVC_Lab3.Controllers
 
         public async Task<IActionResult> Index()
         {
-
-            var conditions = new List<ScanCondition>();
-            var movies = await _context.ScanAsync<Movie>(conditions).GetRemainingAsync();
+            // get all movies
+            var movies = await _context.ScanAsync<Movie>(default).GetRemainingAsync();
             ViewData["UserId"] = _userManager.GetUserId(this.User);
             return View(movies);
         }
 
-        public IActionResult Upsert(string? id)
+        public async Task<IActionResult> Upsert(string? id)
         {
             if (string.IsNullOrEmpty(id)) 
             {
@@ -47,11 +47,24 @@ namespace COMP306_MVC_Lab3.Controllers
             else
             {
                 // edit movie view
-                return NotFound();
+                Movie? movieRetrieved = await _context.LoadAsync<Movie>(id);
+                if (movieRetrieved != null) 
+                {
+                    var userId = _userManager.GetUserId(this.User);
+                    if (userId != movieRetrieved.UserID)
+                    {
+                        return Unauthorized();
+                    }
+                    return View(movieRetrieved);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
         }
         [HttpPost]
-        public IActionResult Upsert(Movie movie)
+        public async Task<IActionResult> Upsert(Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -59,12 +72,18 @@ namespace COMP306_MVC_Lab3.Controllers
                 {
                     // for adding movie
                     movie.Id = Guid.NewGuid().ToString();
-                    _context.SaveAsync(movie);
+                    await _context.SaveAsync(movie);
                     return RedirectToAction("Index");
                 }
                 else
                 {
                     // for updating movie
+                    var userId = _userManager.GetUserId(this.User);
+                    if (userId != movie.UserID)
+                    {
+                        return Unauthorized();
+                    }
+                    await _context.SaveAsync(movie);
                     return RedirectToAction("Index");
                 }
             }
@@ -74,10 +93,57 @@ namespace COMP306_MVC_Lab3.Controllers
             }
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Delete(string? id)
         {
-            return View();
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                Movie? movieRetrieved = await _context.LoadAsync<Movie>(id);
+                if (movieRetrieved != null)
+                {
+                    var userId = _userManager.GetUserId(this.User);
+                    if (userId != movieRetrieved.UserID)
+                    {
+                        return Unauthorized();
+                    }
+                    return View(movieRetrieved);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Movie movie)
+        {
+            if (ModelState.IsValid)
+            {
+                if (string.IsNullOrEmpty(movie.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var userId = _userManager.GetUserId(this.User);
+                    if (userId != movie.UserID)
+                    {
+                        return Unauthorized();
+                    }
+                    await _context.DeleteAsync<Movie>(movie.Id);
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                return View("Index");
+            }
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
