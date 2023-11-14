@@ -1,0 +1,22 @@
+
+{
+    "region" : "ca-central-1",
+    "configuration" : "Debug",
+    "framework"     : "net6.0",
+    "self-contained" : true,
+    "application"    : "COMP306MVCLab3",
+    "environment"    : "COMP306MVCLab3-dev",
+    "app-path"       : "/",
+    "iis-website"    : "Default Web Site",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-0c98cd3b65c20814c,sg-035f17bc0325de29f\";\"aws:ec2:vpc,Subnets\"=\"subnet-01b0d67d45e1c33f8\"",
+    "solution-stack"       : "64bit Windows Server Core 2019 v2.11.8 running IIS 10.0",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "comp306-mvc-lab3-dev",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "keypair4COMP306",
+    "instance-profile"     : "aws-elasticbeanstalk-COMP306MVCLab3-dev-0",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}

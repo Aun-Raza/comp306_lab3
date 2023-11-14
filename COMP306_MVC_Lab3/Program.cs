@@ -7,9 +7,9 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
-// connection string for the SQL database that stores user information
-var connectionString = builder.Configuration.GetConnectionString("AuthDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AuthDbContextConnection' not found.");
-// context for the SQL database that stores user information
+builder.Configuration.AddSystemsManager("/COMP306_MVC_Lab3/Settings");
+var connectionString = builder.Configuration["ConnectionString"]
+                      ?? throw new InvalidOperationException("Connection string 'ConnectionString' not found.");
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -22,6 +22,7 @@ builder.Services.AddDefaultAWSOptions(awsOptions);
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddAWSService<IAmazonDynamoDB>();
 builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -57,7 +58,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=App}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();
