@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var currentUserId = ViewData["UserId"]?.ToString();
+}
+
+@model IEnumerable<Movie> 
+
+<div class="text-center">
+    <h1 class="display-4">Movie List</h1>
+    <a asp-controller="App"
+       asp-action="Upsert"
+       class="btn btn-primary mx-2">
+        <i class="bi bi-pencil-square">Create Movie</i>
+    </a>
+    <div class="row mt-4">
+        @foreach (var movie in Model)
+        {
+            <div data-url="@Url.Action("ViewMovieDetail", "App", new { id = movie.Id })"
+                class="clickable-div col-md-4 border">
+                <h2 class="font-monospace d-flex align-items-center justify-content-center" style="height: 5rem">@movie.Title</h2>
+                <img src="@movie.ImagePath" width="100%" />
+                <div class="d-flex justify-content-between gap-1 mt-1" role="group">
+                    @if (!string.IsNullOrEmpty(currentUserId) && currentUserId.Equals(movie.UserID))
+                    {
+                        <a asp-controller="App"
+                        asp-action="Upsert"
+                        asp-route-id="@movie.Id"
+                           class="btn btn-primary flex-fill">
+                            <i class="bi bi-pencil-square">Edit</i>
+                        </a>
+                        <a asp-controller="App"
+                        asp-action="Delete"
+                        asp-route-id="@movie.Id"
+                           class="btn btn-danger flex-fill">
+                            <i class="bi bi-trash-fill">Delete</i>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.clickable-div').click(function() {
+            window.location = $(this).data('url');
+        });
+    });
+</script>

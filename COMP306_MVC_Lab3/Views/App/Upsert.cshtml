@@ -1,0 +1,66 @@
+﻿@model Movie
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="Id" hidden />
+    <input asp-for="UserID" hidden />
+    <input asp-for="ImagePath" hidden />
+    <input asp-for="FilePath" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">@(!string.IsNullOrEmpty(Model.Id)?"Update":"Create") Product</h2>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-10">
+                <div asp-validation-summary="All"></div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Title" class="p-0">Title</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for=Genre class="p-0">Genre</label>
+                    <input asp-for=Genre class="form-control" />
+                    <span asp-validation-for="Genre" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="ImagePath" class="p-0"></label>
+                    <input type="file" name="img_file" class="form-control" />
+                    <span asp-validation-for="ImagePath" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="FilePath" class="p-0"></label>
+                    <input type="file" name="movie_file" class="form-control" />
+                    <span asp-validation-for="FilePath" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-2">
+                <img src="@Model.ImagePath"
+                     style="border-radius:5px; border:1px solid #bbb9b9"
+                     width="100%" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <button type="submit"
+                        class="btn btn-primary form-control"
+                >
+                    @(!string.IsNullOrEmpty(Model.Id)?"Update" : "Create")
+                </button>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="App"
+                    asp-action="Index"
+                    class="btn btn-secondary form-control border"
+                >
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

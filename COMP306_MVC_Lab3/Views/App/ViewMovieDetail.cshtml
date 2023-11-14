@@ -1,0 +1,59 @@
+﻿@model MovieVM
+
+@{
+    ViewData["Title"] = "View Movie Detail";
+    var currentUserId = ViewData["UserId"]?.ToString();
+}
+<div>
+    <div class="row pb-2">
+        <h2 class="text-primary text-center">@Model.Movie?.Title</h2>
+    </div>
+    <div class="row">
+        <!-- Image portrait -->
+        <div class="col-4">
+            <img src="@Model.Movie?.ImagePath"
+                 style="border-radius:5px; border:1px solid #bbb9b9"
+                 width="100%" />
+        </div>
+        <div class="col-8">
+            <p>Genre: @Model.Movie?.Genre</p>
+            <a asp-controller="App"
+               asp-action="GetFile"
+               asp-route-objectName="@Model.Movie?.FilePath"
+               class="btn btn-secondary border">
+                Download movie
+            </a>
+        </div>
+    </div>
+    <!-- For comments and review -->
+    <div class="mt-4">
+        <a asp-controller="App"
+           asp-action="ReviewMovie"
+           asp-route-movieId="@Model.Movie?.Id"
+           class="btn btn-primary border">
+            Write Review
+        </a>
+        <h2 class="text-secondary">Reviews</h2>
+        @if (Model.Reviews is not null)
+        {
+            @foreach(var obj in Model.Reviews)
+            {
+                <div class="border p-3">
+                    <h3>@obj.Title</h3>
+                    <p>@obj.Comment</p>
+                    <p>@obj.Rating</p>
+                    @if (currentUserId == obj.UserID)
+                    {
+                        <a asp-controller="App"
+                           asp-action="ReviewMovie"
+                           asp-route-movieId="@Model.Movie?.Id"
+                           asp-route-reviewId="@obj.Id"
+                           class="btn btn-primary border">
+                            Edit Review
+                        </a>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
